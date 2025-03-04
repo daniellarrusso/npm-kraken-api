@@ -1,4 +1,5 @@
-const got    = require('got');
+// const got    = require('got');
+const axios = require('axios');
 const crypto = require('crypto');
 const qs     = require('qs');
 
@@ -28,33 +29,42 @@ const getMessageSignature = (path, request, secret, nonce) => {
 };
 
 // Send an API request
-const rawRequest = async (url, headers, data, timeout) => {
-	// Set custom User-Agent string
-	headers['User-Agent'] = 'Kraken Javascript API Client';
+const rawRequest = async(url, headers, data, timeout) => {
+    // Set custom User-Agent string
+    headers['User-Agent'] = 'Kraken Javascript API Client';
 
-	const options = { headers, timeout };
+    const options = { headers, timeout };
 
-	Object.assign(options, {
-		method : 'POST',
-		body   : qs.stringify(data),
-	});
+    Object.assign(options, {
+        method: 'POST',
+        body: qs.stringify(data),
+    });
 
-	const { body } = await got(url, options);
-	const response = JSON.parse(body);
+    // const { body } = await got(url, options);
+    // const response = JSON.parse(body);
+    let body = await axios.post(url, qs.stringify(data), options);
 
-	if(response.error && response.error.length) {
-		const error = response.error
-			.filter((e) => e.startsWith('E'))
-			.map((e) => e.substr(1));
+    let myresponse = JSON.stringify(body.data);
+    // console.log("start");
+    // console.log(myresponse);
+    // console.log("end");
 
-		if(!error.length) {
-			throw new Error("Kraken API returned an unknown error");
-		}
 
-		throw new Error(error.join(', '));
-	}
+    const response = JSON.parse(myresponse);
 
-	return response;
+    if (response.error && response.error.length) {
+        const error = response.error
+            .filter((e) => e.startsWith('E'))
+            .map((e) => e.substr(1));
+
+        if (!error.length) {
+            throw new Error("Kraken API returned an unknown error");
+        }
+
+        throw new Error(error.join(', '));
+    }
+
+    return response;
 };
 
 /**
