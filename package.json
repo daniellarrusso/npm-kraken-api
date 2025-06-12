@@ -1,6 +1,6 @@
 {
   "name": "kraken-api-node",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A maintained fork of the kraken.com API client library for NodeJS, with updates and fixes.",
   "keywords": [
     "kraken",
@@ -10,6 +10,7 @@
     "crypto",
     "exchange"
   ],
+  "types": "kraken.d.ts",
   "author": "Robert Myers (https://github.com/nothingisdead)",
   "contributors": [
     "Nathan Adams (https://github.com/daniellarrusso)"
